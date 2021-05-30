@@ -1,7 +1,10 @@
 #include "M5Atom.h"
 
 uint8_t DisBuff[2 + 5 * 5 * 3];
-uint8_t ctr = 0;
+uint8_t FSM = 0;
+unsigned long previousTime=0; 
+bool state=false;
+unsigned long currentTime;
 
 void setBuff(uint8_t Rdata, uint8_t Gdata, uint8_t Bdata)
 {
@@ -15,6 +18,7 @@ void setBuff(uint8_t Rdata, uint8_t Gdata, uint8_t Bdata)
     }
 }
 
+
 void setup()
 {
     M5.begin(true, false, true);
@@ -24,66 +28,60 @@ void setup()
 }
 
 
+
 void loop()
 {
     if (M5.Btn.wasPressed())
     {
 
-        switch (ctr)
+        switch (FSM)
         {
 
         case 0:
          {         
           setBuff(0x00, 0x00, 0x00); //BLACK
+          
           break;
           }
          
         case 1:        
-         {do
-            {
-            setBuff(0xff, 0xff, 0xff); //WHITE
-                //wait for 1000 ms
-                 int period = 1000;
-                  unsigned long time_now = 0;
-                 // Serial.begin(115200); I think we don't need this line
-                  time_now = millis();
-                  while(millis() < time_now + period){} //wait for 1000 ms
-                  
-            setBuff(0x00, 0x00, 0x00); //BLACK   
-                  //wait for 1000 ms
-                 int period = 1000;
-                  unsigned long time_now = 0;
-                 // Serial.begin(115200); I think we don't need this line
-                  time_now = millis();
-                  while(millis() < time_now + period){} //wait for 1000 ms
-                  
-            } while(!M5.Btn.wasPressed());
+         {
+           currentTime=millis(); //millis retrieves current time and stores it into variable currentTime
+           if(currentTime-previousTime>=1000){ //if 1 second passed, switch LED color
+              
+              if(state==false){
+                setBuff(0xff, 0xff, 0xff); //white
+                state=true;
+              }
+              else {
+                setBuff(0x00, 0x00, 0x00); //black
+                state=false;
+              }
+              
+            previousTime=currentTime;
+            }
             break;
-         }
+        }
 
          
         case 2:
-         {do
-            {
-            setBuff(0xff, 0x00, 0x00);//RED
-                //wait for 1000 ms
-                 int period = 1000;
-                  unsigned long time_now = 0;
-                 // Serial.begin(115200); I think we don't need this line
-                  time_now = millis();
-                  while(millis() < time_now + period){} //wait for 1000 ms
-                  
-            setBuff(0x00, 0x00, 0x00); //BLACK   
-                  //wait for 1000 ms
-                 int period = 1000;
-                  unsigned long time_now = 0;
-                 // Serial.begin(115200); I think we don't need this line
-                  time_now = millis();
-                  while(millis() < time_now + period){} //wait for 1000 ms
-                  
-            } while(!M5.Btn.wasPressed());
+        {
+           currentTime=millis(); //millis retrieves current time and stores it into variable currentTime
+           if(currentTime-previousTime>=1000){ //if 1 second passed, switch LED color
+              
+              if(state==false){
+                setBuff(0xff, 0x00, 0x00); //red
+                state=true;
+              }
+              else {
+                setBuff(0x00, 0x00, 0x00); //black
+                state=false;
+              }
+              
+            previousTime=currentTime;
+            }
             break;
-         }
+        }
 
  
         default:
@@ -91,10 +89,10 @@ void loop()
         }
         M5.dis.displaybuff(DisBuff);
 
-        ctr++;
-        if (ctr >= 3)
+        FSM++;
+        if (FSM >= 3)
         {
-            ctr = 0;
+            FSM = 0;
         }
     }
 
