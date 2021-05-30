@@ -22,15 +22,22 @@ void setBuff(uint8_t Rdata, uint8_t Gdata, uint8_t Bdata)
 void setup()
 {
     M5.begin(true, false, true);
-    delay(10);
-    setBuff(0x00, 0x00, 0x00);
-    M5.dis.displaybuff(DisBuff);
+   setBuff(0x00, 0x00, 0x00);
+   M5.dis.displaybuff(DisBuff);
+   //M5.dis.drawpix(i,0x000000);//black
 }
 
 
 
 void loop()
 {
+    currentTime=millis(); //millis retrieves current time and stores it into variable currentTime
+     if(currentTime-previousTime>=1000){ //if 1 second passed, switch the state 
+            state=!state;
+            previousTime=currentTime;
+     }
+
+    
     if (M5.Btn.wasPressed())
     {
 
@@ -39,26 +46,20 @@ void loop()
 
         case 0:
          {         
-          setBuff(0x00, 0x00, 0x00); //BLACK
-          
+         // M5.dis.drawpix(i,0x000000); //BLACK
           break;
           }
          
         case 1:        
          {
-           currentTime=millis(); //millis retrieves current time and stores it into variable currentTime
-           if(currentTime-previousTime>=1000){ //if 1 second passed, switch LED color
-              
               if(state==false){
-                setBuff(0xff, 0xff, 0xff); //white
-                state=true;
+               // M5.dis.drawpix(i,0x00ff00); //red
+                setBuff(0xff, 0x00, 0x00); //red
               }
               else {
-                setBuff(0x00, 0x00, 0x00); //black
-                state=false;
+              //  M5.dis.drawpix(i,0x000000);//black
+               setBuff(0x00, 0x00, 0x00); //black
               }
-              
-            previousTime=currentTime;
             }
             break;
         }
@@ -66,19 +67,14 @@ void loop()
          
         case 2:
         {
-           currentTime=millis(); //millis retrieves current time and stores it into variable currentTime
-           if(currentTime-previousTime>=1000){ //if 1 second passed, switch LED color
-              
-              if(state==false){
-                setBuff(0xff, 0x00, 0x00); //red
-                state=true;
+            if(state==false){
+               // M5.dis.drawpix(i,0xffffff); //white
+               setBuff(0xff, 0xff, 0xff); //white
               }
               else {
-                setBuff(0x00, 0x00, 0x00); //black
-                state=false;
+               // M5.dis.drawpix(i,0x000000);//black
+               setBuff(0x00, 0x00, 0x00); //black
               }
-              
-            previousTime=currentTime;
             }
             break;
         }
@@ -96,6 +92,5 @@ void loop()
         }
     }
 
-    delay(50);
     M5.update();
 }
