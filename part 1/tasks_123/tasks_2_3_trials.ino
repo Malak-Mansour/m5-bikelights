@@ -53,11 +53,11 @@ void loop()
             delay(1000);// delay for 0.5 second
             M5.update(); // update the state of the board
 
-             if (M5.Btn.wasPressed())
-             break;
+           //  if (M5.Btn.wasPressed())
+            // break;
          }
          
-         break;
+       //  break;
          }
          
      
@@ -76,8 +76,8 @@ void loop()
             delay(1000);// delay for 0.5 second
             M5.update(); // update the state of the board
 
-             if (M5.Btn.wasPressed())
-             break;
+           //  if (M5.Btn.wasPressed())
+         //    break;
          }
          
          break;
