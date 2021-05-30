@@ -45,11 +45,29 @@ void loop()
          
           while (FSM==1)
          {
-         /* setBuff(0xff, 0xff, 0xff); //#define WHITE           rgb(0xFF,0xFF,0xFF)
-              delay (1000);
-              setBuff(0x00, 0x00, 0x00);    
-              delay (1000);                    
-             */
+             setBuff(0x00, 0x00, 0x00); // off state
+            M5.dis.displaybuff(DisBuff); // display the state
+            delay(1000); // delay the off state for 0.5 second
+            setBuff(0xff, 0x00, 0x00); // set state of color to red
+            M5.dis.displaybuff(DisBuff); // display the state
+            delay(1000);// delay for 0.5 second
+            M5.update(); // update the state of the board
+
+             if (M5.Btn.wasPressed())
+             break;
+         }
+         
+         break;
+         }
+         
+     
+       
+        case 2:
+         
+         {
+         
+          while (FSM==2)
+         {
              setBuff(0x00, 0x00, 0x00); // off state
             M5.dis.displaybuff(DisBuff); // display the state
             delay(1000); // delay the off state for 0.5 second
@@ -57,17 +75,14 @@ void loop()
             M5.dis.displaybuff(DisBuff); // display the state
             delay(1000);// delay for 0.5 second
             M5.update(); // update the state of the board
+
+             if (M5.Btn.wasPressed())
+             break;
          }
-       //     break;
-     
+         
+         break;
          }
-        case 2:
-       
-        {
-          setBuff(0xff, 0x00, 0x00);//#define RED rgb(0xFF,0x00,0x00
-          break;
-        }
- 
+
         default:
             break;
         }
