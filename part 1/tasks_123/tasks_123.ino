@@ -29,9 +29,9 @@ void loop()
         case 1:
          {
               if(state==false){
-                  M5.dis.fillpix(0x00ff00));//red
+                  M5.dis.fillpix(0x00ff00);//red
               }
-              elseif(state==true) {
+              else if(state==true) {
                  M5.dis.fillpix(0x000000);//black
               }
 
@@ -44,7 +44,7 @@ void loop()
             if(state==false){
                  M5.dis.fillpix(0xffffff);//white
               }
-              elseif(state==true){
+              else if(state==true){
                 M5.dis.fillpix(0x000000);//black
               }
 
