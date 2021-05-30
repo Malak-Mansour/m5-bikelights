@@ -14,9 +14,6 @@ void setup()
 
 void loop()
 {
-    if (M5.Btn.wasPressed())
-    {
-
         switch (FSM)
         {
 
@@ -62,12 +59,16 @@ void loop()
             previousTime=millis();
      }
 
-        FSM++;
-        if (FSM >= 3)
+    
+    if (M5.Btn.wasPressed())
         {
-            FSM = 0;
+            FSM++;
+            if (FSM >= 3)
+            {
+                FSM = 0;
+            }
         }
-    }
+
 
     M5.update();
 }
