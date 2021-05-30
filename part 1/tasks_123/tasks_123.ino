@@ -14,13 +14,6 @@ void setup()
 
 void loop()
 {
-    //millis retrieves current time
-     if(millis()-previousTime>=50){ //if 50 milliseconds passed, switch the state 
-            state=!state;
-            previousTime=currentTime;
-     }
-
-    
     if (M5.Btn.wasPressed())
     {
 
@@ -28,12 +21,12 @@ void loop()
         {
 
         case 0:
-         {     
+         {
           M5.dis.fillpix(0x000000);//black
           break;
           }
-         
-        case 1:        
+
+        case 1:
          {
               if(state==false){
                   M5.dis.fillpix(0x00ff00));//red
@@ -41,11 +34,11 @@ void loop()
               elseif(state==true) {
                  M5.dis.fillpix(0x000000);//black
               }
-            
+
             break;
         }
 
-         
+
         case 2:
         {
             if(state==false){
@@ -54,7 +47,7 @@ void loop()
               elseif(state==true){
                 M5.dis.fillpix(0x000000);//black
               }
-           
+
             break;
         }
 
@@ -62,6 +55,12 @@ void loop()
         default:
             break;
         }
+
+//millis retrieves current time
+     if(millis()-previousTime>=50){ //if 50 milliseconds passed, switch the state 
+            state=!state;
+            previousTime=millis();
+     }
 
         FSM++;
         if (FSM >= 3)
