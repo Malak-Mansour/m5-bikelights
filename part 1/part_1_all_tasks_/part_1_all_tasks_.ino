@@ -1,18 +1,24 @@
+#include <I2C_MPU6886.h>
+
 #include "M5Atom.h"
 
-uint8_t FSM = 0;
-unsigned long previousTime=0; 
+//uint8_t FSM = 0;
+unsigned long previousTime=0;
 bool state=false;
-int n;
-float ax, ay, az;
-float ax_avg, ay_avg, az_avg;
+int n=5;
+float ax=0, ay=0, az=0;
+float ax_avg=0, ay_avg=0, az_avg=0;
+bool IMU6886Flag = false;
 
 
 void setup()
 {
    M5.begin(true, false, true);
+       IMU6886Flag = M5.IMU.Init() == 0;
 }
 
+
+uint8_t FSM=-1;
 
 
 void loop()
@@ -51,92 +57,87 @@ void loop()
             break;
         }
 
-        
+       
         case 3:
           {
-            ax, ay, az = 0;
-            ax_avg, ay_avg, az_avg = 0;
-           
-            M5.IMU.getAccel(&ax, &ay, &az);
-            n = sizeof(ax);
-            ax_avg = ax/n;
-            ay_avg = ay/n;
-            az_avg = az/n;
-            //now calculate the moving average
-            ax_avg = ((ax_avg * (n - 1)) + fabs(ax)) / n;
-            ay_avg = ((ay_avg * (n - 1)) + fabs(ay)) / n;
-            az_avg = ((az_avg * (n - 1)) + fabs(az)) / n;
-
-            if (ax_avg>=thresh || ay_avg>=thresh || az_avg>=thresh)
-            {
-               while (FSM==3)
-                   {
-                        if(state==false){
-                             M5.dis.fillpix(0x00ff00);//red
-                          }
-                        else if(state==true) {
-                             M5.dis.fillpix(0x000000);//black
-                          }
-                   }
-              }
-              
-              else
+              if (IMU6886Flag)
               {
-                 M5.dis.fillpix(0x00ff00); // set state of color to solid red
+                  M5.IMU.getAccelData (&ax, &ax, &ax);
+                 
+                  ax_avg = ((ax * (n - 1)) + fabs(ax)) / n;
+               //   ay_avg = ((ay * (n - 1)) + fabs(ay)) / n;
+                 // az_avg = ((az * (n - 1)) + fabs(az)) / n;
+
+                  if (abs (ax_avg)<0.8 )
+                  {
+
+                     
+                       
+                                if(state==false){
+                                M5.dis.fillpix(0x00ff00);//red
+                                }
+                              else if(state==true)
+                              {
+                                   M5.dis.fillpix(0x000000);//black
+                                }      
+                               
+                     
+                    }
+                   
+                    else
+                    {
+     
+                                  M5.dis.fillpix(0x00ff00);//red
+                                
+                   
+                    }
+                   
               }
-
-              break;
+                break;
           }
+   
 
-
-          case 4:
+        case 4:
           {
-            ax, ay, az = 0;
-            ax_avg, ay_avg, az_avg = 0;
-           
-            M5.IMU.getAccel(&ax, &ay, &az);
-            n = sizeof(ax);
-            ax_avg = ax/n;
-            ay_avg = ay/n;
-            az_avg = az/n;
-            //now calculate the moving average
-            ax_avg = ((ax_avg * (n - 1)) + fabs(ax)) / n;
-            ay_avg = ((ay_avg * (n - 1)) + fabs(ay)) / n;
-            az_avg = ((az_avg * (n - 1)) + fabs(az)) / n;
-
-            if (ax_avg>=thresh || ay_avg>=thresh || az_avg>=thresh)
-            {
-               while (FSM==4)
-                   {
-                        if(state==false){
-                             M5.dis.fillpix(0xffffff);//white
-                          }
-                        else if(state==true) {
-                             M5.dis.fillpix(0x000000);//black
-                          }
-                   }
-              }
-              
-              else
+              if (IMU6886Flag)
               {
-                 M5.dis.fillpix(0xffffff); // set state of color to solid white
-              }
+                  M5.IMU.getAccelData (&ax, &ax, &ax);
+                 
+                  ax_avg = ((ax * (n - 1)) + fabs(ax)) / n;
 
-              break;
+                  if (abs (ax_avg)<0.8 )
+                  {
+                                if(state==false){
+                                M5.dis.fillpix(0xffffff);//red
+                                }
+                              else if(state==true)
+                              {
+                                   M5.dis.fillpix(0x000000);//black
+                                }      
+                    }
+                   
+                    else
+                    {
+     
+                                  M5.dis.fillpix(0xffffff);//red
+                    }
+                   
+              }
+                break;
           }
+
           
- 
         default:
             break;
         }
 
-//millis retrieves current time
-     if(millis()-previousTime>=50){ //if 50 milliseconds passed, switch the state 
+      //millis retrieves currentc time
+     if(millis()-previousTime>=50){ //if 50 milliseconds passed, switch the state
             state=!state;
             previousTime=millis();
      }
 
-    
+   
     if (M5.Btn.wasPressed())
         {
             FSM++;
