@@ -1,7 +1,7 @@
 /*make use of: https://github.com/m5stack/M5Atom
    https://github.com/m5stack/m5-docs/blob/master/docs/en/api/lcd.md
   void drawpix(uint8_t xpos, uint8_t ypos, CRGB Color): Set the color of a LED in coordinate mode
-  void displaybuff(uint8_t *buffptr, int8_t offsetx = 0, int8_t offsety = 0): Display an image
+  void displaybuff(uint8_t *1.c, int8_t offsetx = 0, int8_t offsety = 0): Display an image
   https://github.com/lukasmaximus89/M5Atom-Resources/blob/master/glcdfont.c for font
   M5.IMU.getGyroData(&gyroX, &gyroY, &gyroZ); to get x,y,&z axis rotations
    M5.IMU.getAhrsData(&pitch, &roll, &yaw); to get attitude along all axes
@@ -39,12 +39,12 @@ uint8_t FSM = 0;
 unsigned long previousTime = 0;
 bool state = false;
 int n = 144; //array size, 24hrs  milliseconds
-//float ax=0, ay=0, az=0;
+float gyroX, gyroY, gyroZ;
 //float ax_avg=0, ay_avg=0, az_avg=0;
 bool IMU6886Flag = false;
 
 //array to store temperature values from the last 24 hours (one value each 5 mins)
-unsigned long temp24h[n] = 0;
+unsigned long temp24h[144] = {0};
 int ctr = 0; //for array indeces
 unsigned long sum = 0; //for sum of array elements
 unsigned long avgTemp24 = 0;
@@ -58,8 +58,17 @@ void setup()
 
   matrix.begin();
   matrix.setTextWrap(false);
-  matrix.setBrightness(40);
+  matrix.setBrightness(15);
   matrix.setTextColor(colors[0]);
+
+
+  do {
+    //CHECK EXACT ANGLE FOR FACING UP!!!
+  } while (gyroY != 0 || !M5.Btn.wasPressed()); //facing upwards and button is pressed (wakeup)
+
+  //both have to be true to break out of this loop, then set FSM to the first case
+  FSM = 1;
+
 }
 
 
@@ -69,6 +78,7 @@ int pass = 0;
 
 void loop()
 {
+
   M5.IMU.getGyroData(&gyroX, &gyroY, &gyroZ);
 
 
@@ -86,14 +96,19 @@ void loop()
     }
   }
 
-  //CHECK EXACT ANGLE FOR FACING DOWN!!!
-  else if (gyroY == 0) FSM = 0; //faacing down
+  //CHECK EXACT ANGLE FOR FACING DOWN AND FACING UP!!!
+  else if (gyroY == 0) {
+    FSM = 0; //facing down, shut it down
+    if (gyroY == 0 && M5.Btn.wasPressed()) //facing upwards
+      FSM = 1;
+  }
+
 
 
   switch (FSM)
   {
 
-    case 0: //off
+    case 0: //off (sleeping mode)
       {
         M5.dis.fillpix(0x000000);//black
         break;
@@ -101,7 +116,10 @@ void loop()
 
     case 1: //display current temp
       {
-        //display image 1
+        // void displaybuff(uint8_t * 1.c, int8_t offsetx = 0, int8_t offsety = 0)
+
+        //Display image of 1
+
         if (M5.Btn.wasPressed())
         {
           M5.IMU.getTempData(&t);
@@ -148,8 +166,8 @@ void loop()
           M5.dis.drawpix(1, 0x0000ff);
           M5.dis.drawpix(6, 0x0000ff);
           //green
-          M5.dis.drawpix(2,0x00ff00);
-          M5.dis.drawpix(7,0x00ff00);
+          M5.dis.drawpix(2, 0x00ff00);
+          M5.dis.drawpix(7, 0x00ff00);
           //yellow
           M5.dis.drawpix(3, 0xf1c40f);
           M5.dis.drawpix(8, 0xf1c40f);
@@ -190,7 +208,7 @@ void loop()
             M5.dis.drawpix(16, 0xff0000); M5.dis.drawpix(17, 0xff0000); M5.dis.drawpix(18, 0xff0000); M5.dis.drawpix(19, 0xff0000); M5.dis.drawpix(20, 0xff0000);
             M5.dis.drawpix(21, 0xff0000); M5.dis.drawpix(22, 0xff0000); M5.dis.drawpix(23, 0xff0000); M5.dis.drawpix(24, 0xff0000); M5.dis.drawpix(25, 0xff0000);
           }
-          `
+
           break;
         }
 
@@ -202,7 +220,7 @@ void loop()
           if (M5.Btn.wasPressed())
           {
             //check function for graphing
-            matrix.print(F("GRAPH"));   
+            matrix.print(F("GRAPH"));
           }
           break;
 
@@ -212,16 +230,16 @@ void loop()
         {
           //display image 5
           if (M5.Btn.wasPressed())
-          { 
+          {
             M5.IMU.getTempData(&t);
-          
+
             t_k = t + 273;
-          //ALTERNATIVELY REPLACE K WITH IMAGE I MADE!!
-          matrix.print(F(t_k + "K"));
+            //ALTERNATIVELY REPLACE K WITH IMAGE I MADE!!
+            matrix.print(F(t_k + "K"));
 
             t_f = (t * (9 / 5)) + 32;
-          //ALTERNATIVELY REPLACE *F WITH IMAGE I MADE!!
-          matrix.print(F(t_f + "*F"));   
+            //ALTERNATIVELY REPLACE *F WITH IMAGE I MADE!!
+            matrix.print(F(t_f + "*F"));
           }
           break;
         }
