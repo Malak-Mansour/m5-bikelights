@@ -35,7 +35,7 @@ const uint16_t colors[] = {
 
 
 float t = 0, t_f = 0, t_k = 0; //temporary variable to store current temperatures
-uint8_t FSM = -1;
+uint8_t FSM = 0;
 unsigned long previousTime = 0;
 bool state = false;
 int n = 144; //array size, 24hrs  milliseconds
@@ -66,123 +66,195 @@ void setup()
 int x    = matrix.width();
 int pass = 0;
 
+
 void loop()
 {
+  M5.IMU.getGyroData(&gyroX, &gyroY, &gyroZ);
+
+
+  if (gyroY == 300) { //titled to the right
+    FSM++;
+    if (FSM > 5) {
+      FSM == 1;
+    }
+  }
+
+  else if (gyroY == -300) { //titled to the left
+    FSM--;
+    if (FSM < 1) {
+      FSM == 5;
+    }
+  }
+
+  //CHECK EXACT ANGLE FOR FACING DOWN!!!
+  else if (gyroY == 0) FSM = 0; //faacing down
+
+
   switch (FSM)
   {
 
-    case 0:
+    case 0: //off
       {
-
-        M5.IMU.getTempData(&t);
-        
-        //display t value + degree celsius beside it
-
+        M5.dis.fillpix(0x000000);//black
         break;
       }
 
-    case 1:
+    case 1: //display current temp
       {
-        sum = 0;
-        for (int i = 0; i < n; i++)
+        //display image 1
+        if (M5.Btn.wasPressed())
         {
-          sum += temp24h[i];
+          M5.IMU.getTempData(&t);
+
+          //ALTERNATIVELY REPLACE *C WITH IMAGE I MADE!!
+          matrix.print(F(t + "*C"));
         }
-        avgTemp24 = sum / n;
-        //display avgTemp24 value
-        
-        matrix.fillScreen(0);
-        matrix.setCursor(x, 0);
-        matrix.print(F(avgTemp24+"*C"));
-        if (--x < -25) {
-          x = matrix.width();
-          if (++pass >= 4) pass = 0;
-          matrix.setTextColor(colors[pass]);
+        break;
+      }
+
+    case 2: //calculate avg temp
+      {
+        //display image 2
+        if (M5.Btn.wasPressed())
+        {
+          sum = 0;
+          for (int i = 0; i < n; i++)
+          {
+            sum += temp24h[i];
+          }
+          avgTemp24 = sum / n;
+
+          matrix.fillScreen(0);
+          matrix.setCursor(x, 0);
+
+          //ALTERNATIVELY REPLACE *C WITH IMAGE I MADE!!
+          matrix.print(F(avgTemp24 + "*C"));
+          if (--x < -25) {
+            x = matrix.width();
+            if (++pass >= 4) pass = 0;
+            matrix.setTextColor(colors[pass]);
+          }
+        }
+        break;
+      }
+
+
+    case 3: //color scale
+      {
+        //display image 3
+        if (M5.Btn.wasPressed())
+        {
+          //blue
+          M5.dis.drawpix(1, 0x0000ff);
+          M5.dis.drawpix(6, 0x0000ff);
+          //green
+          M5.dis.drawpix(2,0x00ff00);
+          M5.dis.drawpix(7,0x00ff00);
+          //yellow
+          M5.dis.drawpix(3, 0xf1c40f);
+          M5.dis.drawpix(8, 0xf1c40f);
+          //orange
+          M5.dis.drawpix(4, 0xd35400);
+          M5.dis.drawpix(9, 0xd35400);
+          //red
+          M5.dis.drawpix(5, 0xff0000);
+          M5.dis.drawpix(10, 0xff0000);
+
+          if (t < 15) {   //display blue
+            M5.dis.drawpix(11, 0x0000ff); M5.dis.drawpix(12, 0x0000ff); M5.dis.drawpix(13, 0x0000ff); M5.dis.drawpix(14, 0x0000ff); M5.dis.drawpix(15, 0x0000ff);
+            M5.dis.drawpix(16, 0x0000ff); M5.dis.drawpix(17, 0x0000ff); M5.dis.drawpix(18, 0x0000ff); M5.dis.drawpix(19, 0x0000ff); M5.dis.drawpix(20, 0x0000ff);
+            M5.dis.drawpix(21, 0x0000ff); M5.dis.drawpix(22, 0x0000ff); M5.dis.drawpix(23, 0x0000ff); M5.dis.drawpix(24, 0x0000ff); M5.dis.drawpix(25, 0x0000ff);
+          }
+
+          else if (t >= 15 && t < 22) //display green
+          {
+            M5.dis.drawpix(11, 0x00ff00); M5.dis.drawpix(12, 0x00ff00); M5.dis.drawpix(13, 0x00ff00); M5.dis.drawpix(14, 0x00ff00); M5.dis.drawpix(15, 0x00ff00);
+            M5.dis.drawpix(16, 0x00ff00); M5.dis.drawpix(17, 0x00ff00); M5.dis.drawpix(18, 0x00ff00); M5.dis.drawpix(19, 0x00ff00); M5.dis.drawpix(20, 0x00ff00);
+            M5.dis.drawpix(21, 0x00ff00); M5.dis.drawpix(22, 0x00ff00); M5.dis.drawpix(23, 0x00ff00); M5.dis.drawpix(24, 0x00ff00); M5.dis.drawpix(25, 0x00ff00);
+          }
+          else if (t >= 22 && t < 35) //display yellow
+          {
+            M5.dis.drawpix(11, 0xf1c40f); M5.dis.drawpix(12, 0xf1c40f); M5.dis.drawpix(13, 0xf1c40f); M5.dis.drawpix(14, 0xf1c40f); M5.dis.drawpix(15, 0xf1c40f);
+            M5.dis.drawpix(16, 0xf1c40f); M5.dis.drawpix(17, 0xf1c40f); M5.dis.drawpix(18, 0xf1c40f); M5.dis.drawpix(19, 0xf1c40f); M5.dis.drawpix(20, 0xf1c40f);
+            M5.dis.drawpix(21, 0xf1c40f); M5.dis.drawpix(22, 0xf1c40f); M5.dis.drawpix(23, 0xf1c40f); M5.dis.drawpix(24, 0xf1c40f); M5.dis.drawpix(25, 0xf1c40f);
+          }
+          else if (t >= 35 && t < 39) //display orange
+          {
+            M5.dis.drawpix(11, 0xd35400); M5.dis.drawpix(12, 0xd35400); M5.dis.drawpix(13, 0xd35400); M5.dis.drawpix(14, 0xd35400); M5.dis.drawpix(15, 0xd35400);
+            M5.dis.drawpix(16, 0xd35400); M5.dis.drawpix(17, 0xd35400); M5.dis.drawpix(18, 0xd35400); M5.dis.drawpix(19, 0xd35400); M5.dis.drawpix(20, 0xd35400);
+            M5.dis.drawpix(21, 0xd35400); M5.dis.drawpix(22, 0xd35400); M5.dis.drawpix(23, 0xd35400); M5.dis.drawpix(24, 0xd35400); M5.dis.drawpix(25, 0xd35400);
+          }
+          else if (t >= 15 && t < 22) //display red
+          {
+            M5.dis.drawpix(11, 0xff0000); M5.dis.drawpix(12, 0xff0000); M5.dis.drawpix(13, 0xff0000); M5.dis.drawpix(14, 0xff0000); M5.dis.drawpix(15, 0xff0000);
+            M5.dis.drawpix(16, 0xff0000); M5.dis.drawpix(17, 0xff0000); M5.dis.drawpix(18, 0xff0000); M5.dis.drawpix(19, 0xff0000); M5.dis.drawpix(20, 0xff0000);
+            M5.dis.drawpix(21, 0xff0000); M5.dis.drawpix(22, 0xff0000); M5.dis.drawpix(23, 0xff0000); M5.dis.drawpix(24, 0xff0000); M5.dis.drawpix(25, 0xff0000);
+          }
+          `
+          break;
         }
 
+
+      case 4: //graphing
+        {
+
+          //display image 4
+          if (M5.Btn.wasPressed())
+          {
+            //check function for graphing
+            matrix.print(F("GRAPH"));   
+          }
+          break;
+
+        }
+
+      case 5: //change units
+        {
+          //display image 5
+          if (M5.Btn.wasPressed())
+          { 
+            M5.IMU.getTempData(&t);
+          
+            t_k = t + 273;
+          //ALTERNATIVELY REPLACE K WITH IMAGE I MADE!!
+          matrix.print(F(t_k + "K"));
+
+            t_f = (t * (9 / 5)) + 32;
+          //ALTERNATIVELY REPLACE *F WITH IMAGE I MADE!!
+          matrix.print(F(t_f + "*F"));   
+          }
+          break;
+        }
+
+
+      default:
         break;
       }
 
 
-  /*  case 2:
-      {
+      //millis retrieves currentc time
+      //if 5 minutes passed, get the temp and store in array
+      if (millis() - previousTime >= 5 * 60 * 1000) {
+        M5.IMU.getTempData(&t);
+        temp24h[ctr] = t;
 
-        //for color range, use the same conditions for if else statements
-        //but put all colors together on one screen
+        //only increment while array is not full yet
+        if (ctr < n) {
+          ctr++;
+        }
 
-        if (t < 15)
-          //display yellow
-          else if (t >= 15 && t < 22)
-            //display purple
-            else if (t >= 22 && t < 35)
-              //display blue
-              else if (t >= 35 && t < 39)
-                //display green
-                else if (t >= 15 && t < 22)
-                  //display red
+        //once all are filled, shift each value in array 1 unit to the left
+        else if (ctr >= n) {
 
-                  break;
+          for (int j = 0; j < 143; j++) {
+            temp24h[j] = temp24h[j + 1];
+          }
+
+        }
+
       }
 
 
-    case 3:
-      {
-        //check function for graphing
-        break;
-      }
-
-
-    case 4:
-      {
-        t_k = t + 273;
-        //display t_k + the units K
-
-        t_f = (t * (9 / 5)) + 32;
-        //display t_f + the units degree F
-
-        break;
-      }*/
-
-
-    default:
-      break;
+      matrix.show();
+      M5.update();
   }
-
-
-  //millis retrieves currentc time
-  //if 5 minutes passed, get the temp and store in array
-  if (millis() - previousTime >= 5 * 60 * 1000) {
-    M5.IMU.getTempData(&t);
-    temp24h[ctr] = t;
-
-    //only increment while array is not full yet
-    if (ctr < n) {
-      ctr++;
-    }
-
-
-    //once all are filled, shift each value in array 1 unit to the left
-    if (ctr >= n) {
-
-      for (int j = 0; j < 143; j++) {
-        temp24h[j] = temp24h[j + 1];
-      }
-
-    }
-
-  }
-
-
-  if (M5.Btn.wasPressed())
-  {
-    FSM++;
-    if (FSM >= 2)
-    {
-      FSM = 0; //so the counter resets and loops back to the beginning
-    }
-    // void clear();//to clear previous display and show the next one in the case
-  }
-
-  matrix.show();
-  M5.update();
-}
