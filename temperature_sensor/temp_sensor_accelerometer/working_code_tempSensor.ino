@@ -306,6 +306,10 @@ void loop()
       {
         M5.dis.fillpix(0x000000);//black
         Serial.println("black_0");
+
+        if (accZ < 0 && M5.Btn.wasPressed()) { //activation/waking up conditions
+          FSM++;
+        }
         break;
       }
 
