@@ -52,7 +52,8 @@ int ctr = 0; //for array indeces
 unsigned long sum = 0; //for sum of array elements
 unsigned long avgTemp24 = 0;
 int count = 0;
-char charCelsius[4];
+char charCelsius[4]; //2 for main temp whole number, 1 for decimal point, 1 for number after decimal point
+
 
 void setup()
 {
@@ -67,6 +68,243 @@ void setup()
   IMU6886Flag = M5.IMU.Init() == 0;
 
 }
+
+int zero[25] =
+{
+  0, 0, 1, 1, 0,
+  0, 1, 0, 0, 1,
+  0, 1, 0, 0, 1,
+  0, 1, 0, 0, 1,
+  0, 0, 1, 1, 0
+};
+
+int one[25] =
+{
+  0, 0, 1, 0, 0,
+  0, 1, 1, 0, 0,
+  0, 0, 1, 0, 0,
+  0, 0, 1, 0, 0,
+  0, 1, 1, 1, 0
+};
+
+int two[25] =
+{
+  0, 1, 1, 1, 0,
+  0, 0, 0, 0, 1,
+  0, 0, 1, 1, 0,
+  0, 1, 0, 0, 0,
+  0, 1, 1, 1, 1
+};
+
+int three[25] =
+{
+  0, 1, 1, 1, 0,
+  0, 0, 0, 0, 1,
+  0, 0, 1, 1, 0,
+  0, 0, 0, 0, 1,
+  0, 1, 1, 1, 0
+};
+
+int four[25] =
+{
+  0, 0, 0, 1, 0,
+  0, 1, 0, 1, 0,
+  0, 1, 1, 1, 1,
+  0, 0, 0, 1, 0,
+  0, 0, 0, 1, 0
+};
+
+int five[25] =
+{
+  0, 1, 1, 1, 1,
+  0, 1, 0, 0, 0,
+  0, 1, 1, 1, 0,
+  0, 0, 0, 0, 1,
+  0, 1, 1, 1, 0
+};
+
+int six[25] =
+{
+  0, 0, 1, 1, 0,
+  0, 1, 0, 0, 0,
+  0, 1, 1, 1, 0,
+  0, 1, 0, 0, 1,
+  0, 0, 1, 1, 0
+};
+
+int seven[25] =
+{
+  0, 1, 1, 1, 1,
+  0, 0, 0, 1, 0,
+  0, 0, 1, 0, 0,
+  0, 1, 1, 0, 0,
+  1, 0, 0, 0, 0
+};
+
+int eight[25] =
+{
+  0, 0, 1, 0, 0,
+  0, 1, 0, 1, 0,
+  0, 0, 1, 0, 0,
+  0, 1, 0, 1, 0,
+  0, 0, 1, 0, 0
+};
+
+int nine[25] =
+{
+  0, 0, 1, 1, 0,
+  0, 1, 0, 1, 0,
+  0, 0, 1, 1, 0,
+  0, 0, 0, 1, 0,
+  0, 0, 0, 1, 0
+};
+
+int decimal[25] =
+{
+  0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0,
+  0, 0, 1, 0, 0,
+  0, 0, 0, 0, 0
+};
+
+//temp units
+int C[25] =
+{
+  1, 0, 0, 1, 1,
+  0, 0, 1, 0, 0,
+  0, 0, 1, 0, 0,
+  0, 0, 1, 0, 0,
+  0, 0, 0, 1, 1
+};
+
+int F[25] =
+{
+  1, 0, 1, 1, 1,
+  0, 0, 1, 0, 0,
+  0, 0, 1, 1, 1,
+  0, 0, 1, 0, 0,
+  0, 0, 1, 0, 0
+};
+
+int K[25] =
+{
+  0, 1, 0, 0, 1,
+  0, 1, 0, 1, 0,
+  0, 1, 1, 0, 0,
+  0, 1, 0, 1, 0,
+  0, 1, 0, 0, 1
+};
+
+
+
+void displayTempOnMatrix(String charCelsius)
+{
+  for (int i = 0; i < 4; i++) //4 loops because we want temp to 1 decimal place
+  {
+
+    if (charCelsius[i] == '.')
+    {
+
+      M5.dis.clear();
+      drawArray(decimal   , colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };
+    }
+    else if (charCelsius[i] == '0')
+    {
+
+      M5.dis.clear();
+      drawArray(zero, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };
+    }
+    else if (charCelsius[i] == '1')
+    {
+
+      M5.dis.clear();
+      drawArray(one, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };
+    }
+    else if (charCelsius[i] == '2')
+    {
+
+      M5.dis.clear();
+      drawArray(two, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };
+    }
+    else if (charCelsius[i] == '3')
+    {
+
+      M5.dis.clear();
+      drawArray(three, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };;
+    }
+    else if (charCelsius[i] == '4')
+    {
+
+      M5.dis.clear();
+      drawArray(four, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };;
+    }
+    else if (charCelsius[i] == '5')
+    {
+
+      M5.dis.clear();
+      drawArray(five, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };;
+    }
+    else if (charCelsius[i] == '6')
+    {
+
+      M5.dis.clear();
+      drawArray(six, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };;
+    }
+    else if (charCelsius[i] == '7')
+    {
+      M5.dis.clear();
+      drawArray(seven, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };;
+    }
+    else if (charCelsius[i] == '8')
+    {
+      ();
+      M5.dis.clear();
+      drawArray(eight, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };;
+    }
+    else if (charCelsius[i] == '9')
+    {
+
+      M5.dis.clear();
+      drawArray(nine, colorList);
+      if (millis() - previousTime >= 100) {
+        previousTime = millis();
+      };;
+    }
+
+  }
+}
+
 
 
 
@@ -135,25 +373,22 @@ void loop()
         }
 
         else {
-          M5.dis.displaybuff((uint8_t *)image_1, 0, 0); //Display image 1
-          M5.dis.animation((uint8_t *)image_1, 2 , 1, -1)
+          drawArray(1, colorList);
           Serial.println("image 1");
 
           if (M5.Btn.wasPressed())
           {
             M5.IMU.getTempData(&t);
 
-            String temp_C_string = dtostrf(t, 4, 1, charCelsius); //creates char array of size 4 and 1 decimal place from float temperature
+            dtostrf(t, 4, 1, charCelsius); //creates char array of size 4 and 1 decimal place from float temperature
 
-            Serial.println(temp_C_string);
-            matrix.printf(temp_C_string);
+            displayTempOnMatrix(charCelsius);
 
-            if (millis() - previousTime >= 50) {
-              M5.dis.displaybuff((uint8_t *)image_Celsius, 0, 0); //Display dgree sign
-              M5.dis.animation((uint8_t *)image_Celsius, 2 , 1, -1); //NECESSARY?
+            if (millis() - previousTime >= 100) {
+              drawArray(C,colorList);
             }
 
-            
+
           }
         }
         break;
