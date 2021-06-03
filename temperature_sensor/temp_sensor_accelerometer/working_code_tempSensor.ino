@@ -49,7 +49,7 @@ unsigned long sum = 0; //for sum of array elements
 unsigned long avgTemp24 = 0;
 int count = 0;
 
-char charCelsius[4];
+char tempCharArray[4];
 //2 for main temp whole number, 1 for decimal point, 1 for number after decimal point
 //array to store celsius temp after float temp was converted to char array
 
@@ -68,9 +68,6 @@ extern const unsigned char image_Celsius [77]; //variable is declared with exter
 extern const unsigned char image_Fahrenheit [77];
 extern const unsigned char image_Kelvin [77];
 
-char unit = 'C';
-
-
 
 void setup()
 {
@@ -86,104 +83,171 @@ void setup()
 }
 
 
+int tempUnit = 1; //represents celsius
 
 
-void displayTempOnMatrix(String charCelsius)
+void displayTempOnMatrix(char *tempCharArray, int tempUnit)
 {
   for (int i = 0; i < 4; i++) //4 loops because we want temp to 1 decimal place
   {
 
-    if (charCelsius[i] == '.')
+    if (tempCharArray[i] == '.')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_decimal, 0, 0); //Display image of decimal point
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_decimal, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("decimal");
     }
-    else if (charCelsius[i] == '0')
+    else if (tempCharArray[i] == '0')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_0, 0, 0); //Display image 0
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_0, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("0");
     }
-    else if (charCelsius[i] == '1')
+    else if (tempCharArray[i] == '1')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_1, 0, 0); //Display image 1
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_1, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("1");
     }
-    else if (charCelsius[i] == '2')
+    else if (tempCharArray[i] == '2')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_2, 0, 0); //Display image 2
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_2, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("2");
     }
-    else if (charCelsius[i] == '3')
+    else if (tempCharArray[i] == '3')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_3, 0, 0); //Display image 3
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_3, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("3");
     }
-    else if (charCelsius[i] == '4')
+    else if (tempCharArray[i] == '4')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_4, 0, 0); //Display image 4
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_4, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("4");
     }
-    else if (charCelsius[i] == '5')
+    else if (tempCharArray[i] == '5')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_5, 0, 0); //Display image 5
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_5, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("5");
     }
-    else if (charCelsius[i] == '6')
+    else if (tempCharArray[i] == '6')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_6, 0, 0); //Display image 6
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_6, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("6");
     }
-    else if (charCelsius[i] == '7')
+    else if (tempCharArray[i] == '7')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_7, 0, 0); //Display image 7
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_7, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("7");
     }
-    else if (charCelsius[i] == '8')
+    else if (tempCharArray[i] == '8')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_8, 0, 0); //Display image 8
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_8, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("8");
     }
-    else if (charCelsius[i] == '9')
+    else if (tempCharArray[i] == '9')
     {
       M5.dis.clear();
       M5.dis.displaybuff((uint8_t *)image_9, 0, 0); //Display image 9
-      if (millis() - previousTime >= 100) previousTime = millis();
+      //M5.dis.animation((uint8_t *)image_9, 2 , 1, -1);
+      do {
+
+      } while (millis() - previousTime < 500);
+      previousTime = millis();
+      Serial.printf("9");
     }
 
   }
 
-
-  if (unit == 'C') {
+  if (tempUnit == 1) {
     M5.dis.clear();
     M5.dis.displaybuff((uint8_t *)image_Celsius, 0, 0); //Display image for Celsius
-    if (millis() - previousTime >= 100) previousTime = millis();
-    Serial.println("degrees celsius");
+    do {
+
+    } while (millis() - previousTime < 500);
+    previousTime = millis();    Serial.println("degrees celsius");
   }
-  else if (unit == 'F') {
+  else if (tempUnit == 2) {
     M5.dis.clear();
     M5.dis.displaybuff((uint8_t *)image_Fahrenheit, 0, 0); //Display image for Fahrenheit
-    if (millis() - previousTime >= 100) previousTime = millis();
+    do {
+
+    } while (millis() - previousTime < 500);
+    previousTime = millis();    Serial.println("degrees fahrenheit");
+
   }
-  else if (unit == 'K') {
+  else if (tempUnit == 3) {
     M5.dis.clear();
     M5.dis.displaybuff((uint8_t *)image_Kelvin, 0, 0); //Display image for Kelvin
-    if (millis() - previousTime >= 100) previousTime = millis();
+    do {
+
+    } while (millis() - previousTime < 500);
+    previousTime = millis();    Serial.println("kelvin");
+
   }
 
-  
-  M5.dis.clear();
-  if (millis() - previousTime >= 100) previousTime = millis();
 
+  M5.dis.clear();
+  do {
+
+  } while (millis() - previousTime < 500);
+  previousTime = millis();
 }
 
 
@@ -246,7 +310,8 @@ void loop()
       }
 
     case 1: //display current temp
-    { if (accZ > 0) {
+      {
+        if (accZ > 0) {
           FSM = 0;  //facing down, nothing displayed
           Serial.println("black_1");
         }
@@ -254,18 +319,17 @@ void loop()
         else {
           M5.dis.clear();
           M5.dis.displaybuff((uint8_t *)image_1, 0, 0); //Display image 1
-          if (millis() - previousTime >= 100) previousTime = millis();
+          do { } while (millis() - previousTime < 500);
+          previousTime = millis();
           Serial.println("image 1");
 
           if (M5.Btn.wasPressed()) {
             M5.IMU.getTempData(&t);
             Serial.println("got temp");
-            dtostrf(t, 4, 1, charCelsius); //creates char array of size 4 and 1 decimal place from float temperature
-            Serial.println("got charCelsius array");
+            dtostrf(t, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
+            Serial.println("got tempCharArray array");
 
-            unit = 'C';
-
-            displayTempOnMatrix(charCelsius);
+            displayTempOnMatrix(tempCharArray);
             Serial.println("displayed on matrix");
           }
         }
@@ -277,7 +341,10 @@ void loop()
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
           break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
         }
-        //display image 2
+        M5.dis.clear();
+        M5.dis.displaybuff((uint8_t *)image_2, 0, 0); //Display image 2
+        do { } while (millis() - previousTime < 500);
+        previousTime = millis();
         Serial.println("image 2");
 
 
@@ -295,10 +362,14 @@ void loop()
           }
 
           avgTemp24 = sum / count;
-          Serial.println(avgTemp24);
 
-          //display avgTemp24
-          //ALTERNATIVELY REPLACE *C WITH IMAGE I MADE!!
+          dtostrf(avgTemp24, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
+          Serial.println("got tempCharArray array");
+
+          displayTempOnMatrix(tempCharArray, 1);
+          Serial.println("displayed on matrix");
+
+          Serial.println("avgTemp24 displayed");
         }
         break;
       }
@@ -309,7 +380,10 @@ void loop()
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
           break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
         }
-        //display image 3
+        M5.dis.clear();
+        M5.dis.displaybuff((uint8_t *)image_3, 0, 0); //Display image 3
+        do { } while (millis() - previousTime < 500);
+        previousTime = millis();
         Serial.println("image 3");
 
         if (M5.Btn.wasPressed())
@@ -375,7 +449,10 @@ void loop()
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
           break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
         }
-        //display image 4
+        M5.dis.clear();
+        M5.dis.displaybuff((uint8_t *)image_4, 0, 0); //Display image 4
+        do { } while (millis() - previousTime < 500);
+        previousTime = millis();
         Serial.println("image 4");
 
         if (M5.Btn.wasPressed())
@@ -394,24 +471,32 @@ void loop()
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
           break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
         }
-        //display image 5
+        M5.dis.clear();
+        M5.dis.displaybuff((uint8_t *)image_5, 0, 0); //Display image 5
+        do { } while (millis() - previousTime < 500);
+        previousTime = millis();
         Serial.println("image 5");
 
         if (M5.Btn.wasPressed())
         {
           M5.IMU.getTempData(&t);
 
-          char unit = 'K';
-          t_k = t + 273;
-          //display t_k
-          //ALTERNATIVELY REPLACE K WITH IMAGE I MADE!!
-          Serial.println("t_k");
 
-          char unit = 'F';
           t_f = (t * (9 / 5)) + 32;
-          //display t_f
-          //ALTERNATIVELY REPLACE *F WITH IMAGE I MADE!!
+          dtostrf(t_f, 4, 1, tempCharArray);
+          displayTempOnMatrix(tempCharArray, 2);
           Serial.println("t_f");
+
+
+          M5.dis.clear();
+          do {          } while (millis() - previousTime < 500);
+          previousTime = millis();
+
+
+          t_k = t + 273;
+          dtostrf(t_k, 4, 1, tempCharArray);
+          displayTempOnMatrix(tempCharArray, 3);
+          Serial.println("t_k");
 
         }
         break;
