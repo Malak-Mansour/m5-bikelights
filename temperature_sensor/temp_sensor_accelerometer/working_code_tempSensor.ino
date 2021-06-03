@@ -253,6 +253,40 @@ void displayTempOnMatrix(char *tempCharArray, int tempUnit)
 }
 
 
+void graphColorScale(float *graphArray) {
+
+  M5.dis.drawpix(1, 0xffffff); //white
+  Serial.println("white");
+
+  for (int i = 0; i < 24; i++) {
+
+    if (graphArray[i] == 0)
+    { M5.dis.drawpix((i + 1), 0x000000); //black, meaning data was not collected for that array number yet
+      Serial.println("black");
+    }
+    else if (graphArray[i] < 15 && graphArray[i] != 0)
+    { M5.dis.drawpix((i + 1), 0x0000ff); //blue
+      Serial.println("blue");
+    }
+    else if (graphArray[i] >= 15 && graphArray[i] < 22)
+    { M5.dis.drawpix((i + 1), 0x00ff00); //green
+      Serial.println("green");
+    }
+    else if (graphArray[i] >= 22 && graphArray[i] < 35)
+    { M5.dis.drawpix((i + 1), 0xf1c40f); //yellow
+      Serial.println("yellow");
+    }
+    else if (graphArray[i] >= 35 && graphArray[i] < 39)
+    { M5.dis.drawpix((i + 1), 0xd35400); //orange
+      Serial.println("orange");
+    }
+    else if (graphArray[i] >= 15 && graphArray[i] < 22)
+    { M5.dis.drawpix((i + 1), 0xff0000); //red
+      Serial.println("red");
+    }
+  }
+}
+
 
 void loop()
 {
@@ -335,7 +369,7 @@ void loop()
             dtostrf(t, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
             Serial.println("got tempCharArray array");
 
-            displayTempOnMatrix(tempCharArray);
+            displayTempOnMatrix(tempCharArray, 1);
             Serial.println("displayed on matrix");
           }
         }
@@ -345,37 +379,39 @@ void loop()
     case 2: //calculate avg temp
     { if (accZ > 0) { //facing down, nothing displayed
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
-          break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
         }
-        M5.dis.clear();
-        M5.dis.displaybuff((uint8_t *)image_2, 0, 0); //Display image 2
-        do { } while (millis() - previousTime < 500);
-        previousTime = millis();
-        Serial.println("image 2");
+
+        else {
+          M5.dis.clear();
+          M5.dis.displaybuff((uint8_t *)image_2, 0, 0); //Display image 2
+          do { } while (millis() - previousTime < 500);
+          previousTime = millis();
+          Serial.println("image 2");
 
 
-        if (M5.Btn.wasPressed())
-        {
-          sum2 = 0;
-          count2 = 0;
-
-          for (int i = 0; i < n; i++)
+          if (M5.Btn.wasPressed())
           {
-            if (temp24h[i] != 0) {
-              sum2 += temp24h[i];
-              count2++;
+            sum2 = 0;
+            count2 = 0;
+
+            for (int i = 0; i < n; i++)
+            {
+              if (temp24h[i] != 0) {
+                sum2 += temp24h[i];
+                count2++;
+              }
             }
+
+            avgTemp24 = sum2 / count2;
+
+            dtostrf(avgTemp24, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
+            Serial.println("got tempCharArray array");
+
+            displayTempOnMatrix(tempCharArray, 1);
+            Serial.println("displayed on matrix");
+
+            Serial.println("avgTemp24 displayed");
           }
-
-          avgTemp24 = sum2 / count2;
-
-          dtostrf(avgTemp24, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
-          Serial.println("got tempCharArray array");
-
-          displayTempOnMatrix(tempCharArray, 1);
-          Serial.println("displayed on matrix");
-
-          Serial.println("avgTemp24 displayed");
         }
         break;
       }
@@ -384,66 +420,67 @@ void loop()
     case 3: //color scale
     { if (accZ > 0) { //facing down, nothing displayed
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
-          break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
         }
-        M5.dis.clear();
-        M5.dis.displaybuff((uint8_t *)image_3, 0, 0); //Display image 3
-        do { } while (millis() - previousTime < 500);
-        previousTime = millis();
-        Serial.println("image 3");
 
-        if (M5.Btn.wasPressed())
-        {
+        else {
+          M5.dis.clear();
+          M5.dis.displaybuff((uint8_t *)image_3, 0, 0); //Display image 3
+          do { } while (millis() - previousTime < 500);
+          previousTime = millis();
+          Serial.println("image 3");
 
-          if (t < 15)
-          { M5.dis.fillpix(0x0000ff);//blue
+          if (M5.Btn.wasPressed())
+          {
+
+            if (t < 15)
+            { M5.dis.fillpix(0x0000ff);//blue
+              Serial.println("blue");
+            }
+            else if (t >= 15 && t < 22)
+            { M5.dis.fillpix(0x00ff00);//green
+              Serial.println("green");
+            }
+            else if (t >= 22 && t < 35)
+            { M5.dis.fillpix(0xf1c40f);//yellow
+              Serial.println("yellow");
+            }
+            else if (t >= 35 && t < 39)
+            { M5.dis.fillpix(0xd35400);//orange
+              Serial.println("orange");
+            }
+            else if (t >= 15 && t < 22)
+            { M5.dis.fillpix(0xff0000);//red
+              Serial.println("red");
+            }
+
+
+            //color scale
+            //blue
+            M5.dis.drawpix(1, 0x0000ff);
+            M5.dis.drawpix(6, 0x0000ff);
             Serial.println("blue");
-          }
-          else if (t >= 15 && t < 22)
-          { M5.dis.fillpix(0x00ff00);//green
+
+            //green
+            M5.dis.drawpix(2, 0x00ff00);
+            M5.dis.drawpix(7, 0x00ff00);
             Serial.println("green");
-          }
-          else if (t >= 22 && t < 35)
-          { M5.dis.fillpix(0xf1c40f);//yellow
+
+            //yellow
+            M5.dis.drawpix(3, 0xf1c40f);
+            M5.dis.drawpix(8, 0xf1c40f);
             Serial.println("yellow");
-          }
-          else if (t >= 35 && t < 39)
-          { M5.dis.fillpix(0xd35400);//orange
+
+            //orange
+            M5.dis.drawpix(4, 0xd35400);
+            M5.dis.drawpix(9, 0xd35400);
             Serial.println("orange");
-          }
-          else if (t >= 15 && t < 22)
-          { M5.dis.fillpix(0xff0000);//red
+
+            //red
+            M5.dis.drawpix(5, 0xff0000);
+            M5.dis.drawpix(10, 0xff0000);
             Serial.println("red");
+
           }
-
-
-          //color scale
-          //blue
-          M5.dis.drawpix(1, 0x0000ff);
-          M5.dis.drawpix(6, 0x0000ff);
-          Serial.println("blue");
-
-          //green
-          M5.dis.drawpix(2, 0x00ff00);
-          M5.dis.drawpix(7, 0x00ff00);
-          Serial.println("green");
-
-          //yellow
-          M5.dis.drawpix(3, 0xf1c40f);
-          M5.dis.drawpix(8, 0xf1c40f);
-          Serial.println("yellow");
-
-          //orange
-          M5.dis.drawpix(4, 0xd35400);
-          M5.dis.drawpix(9, 0xd35400);
-          Serial.println("orange");
-
-          //red
-          M5.dis.drawpix(5, 0xff0000);
-          M5.dis.drawpix(10, 0xff0000);
-          Serial.println("red");
-
-
 
         }
         break;
@@ -453,30 +490,28 @@ void loop()
     case 4: //graphing (elements in array temp24h over count
     { if (accZ > 0) { //facing down, nothing displayed
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
-          break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
         }
-        M5.dis.clear();
-        M5.dis.displaybuff((uint8_t *)image_4, 0, 0); //Display image 4
-        do { } while (millis() - previousTime < 500);
-        previousTime = millis();
-        Serial.println("image 4");
+        else {
+          M5.dis.clear();
+          M5.dis.displaybuff((uint8_t *)image_4, 0, 0); //Display image 4
+          do { } while (millis() - previousTime < 500);
+          previousTime = millis();
+          Serial.println("image 4");
 
-        if (M5.Btn.wasPressed())
-        {
-
-          //288 elements,each element represents temp at the end of 5 mins, if we wanna graph the temp at the end of each hour, 288/24 = 12 , so we want every 12th element
-          for (int i = 11; i < n; i += 12)
+          if (M5.Btn.wasPressed())
           {
-              graphArray += temp24h[i]; //or better, add to this graphArray the average temperatures for each hour of the 24 hours
+            //288 elements in temp24h,each element represents temp at the end of 5 mins, if we wanna graph the temp at the end of each hour, 288/24 = 12 , so we want every 12th element
+            for (int i = 0; i < 24; i ++)
+            {
+              graphArray[i] = temp24h[(i * 12) + 11]; //we want 11th, 23rd, 35th (12th multiple-1), so using i, i*12+11 will get those values
+              //or better, add to graphArray the average temperatures for each hour of the 24 hours
+            }
+
+            //display color representing each temperature per 24hrs using color scale
+            graphColorScale(graphArray);
+
+            Serial.println("graph");
           }
-
-          //display color representing each temperature using color scale
-          M5.dis.drawpix(1, 0x0000ff); M5.dis.drawpix(2, 0x0000ff); M5.dis.drawpix(3, 0x0000ff); M5.dis.drawpix(4, 0x0000ff); M5.dis.drawpix(5, 0x0000ff);
-          M5.dis.drawpix(11, 0x0000ff); M5.dis.drawpix(12, 0x0000ff); M5.dis.drawpix(13, 0x0000ff); M5.dis.drawpix(14, 0x0000ff); M5.dis.drawpix(15, 0x0000ff);
-          M5.dis.drawpix(16, 0x0000ff); M5.dis.drawpix(17, 0x0000ff); M5.dis.drawpix(18, 0x0000ff); M5.dis.drawpix(19, 0x0000ff); M5.dis.drawpix(20, 0x0000ff);
-          M5.dis.drawpix(21, 0x0000ff); M5.dis.drawpix(22, 0x0000ff); M5.dis.drawpix(23, 0x0000ff); M5.dis.drawpix(24, 0x0000ff); M5.dis.drawpix(25, 0x0000ff);
-
-          Serial.println("graph");
         }
         break;
 
@@ -486,35 +521,36 @@ void loop()
     case 5: //change units
     { if (accZ > 0) { //facing down, nothing displayed
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
-          break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
         }
-        M5.dis.clear();
-        M5.dis.displaybuff((uint8_t *)image_5, 0, 0); //Display image 5
-        do { } while (millis() - previousTime < 500);
-        previousTime = millis();
-        Serial.println("image 5");
-
-        if (M5.Btn.wasPressed())
-        {
-          M5.IMU.getTempData(&t);
-
-
-          t_f = (t * (9 / 5)) + 32;
-          dtostrf(t_f, 4, 1, tempCharArray);
-          displayTempOnMatrix(tempCharArray, 2);
-          Serial.println("t_f");
-
-
+        else {
           M5.dis.clear();
-          do {          } while (millis() - previousTime < 500);
+          M5.dis.displaybuff((uint8_t *)image_5, 0, 0); //Display image 5
+          do { } while (millis() - previousTime < 500);
           previousTime = millis();
+          Serial.println("image 5");
+
+          if (M5.Btn.wasPressed())
+          {
+            M5.IMU.getTempData(&t);
 
 
-          t_k = t + 273;
-          dtostrf(t_k, 4, 1, tempCharArray);
-          displayTempOnMatrix(tempCharArray, 3);
-          Serial.println("t_k");
+            t_f = (t * (9 / 5)) + 32;
+            dtostrf(t_f, 4, 1, tempCharArray);
+            displayTempOnMatrix(tempCharArray, 2);
+            Serial.println("t_f");
 
+
+            M5.dis.clear();
+            do {          } while (millis() - previousTime < 500);
+            previousTime = millis();
+
+
+            t_k = t + 273;
+            dtostrf(t_k, 4, 1, tempCharArray);
+            displayTempOnMatrix(tempCharArray, 3);
+            Serial.println("t_k");
+
+          }
         }
         break;
       }
@@ -528,5 +564,4 @@ void loop()
   matrix.show();
 
   M5.update();
-}
 }
