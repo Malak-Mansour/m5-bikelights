@@ -45,9 +45,11 @@ bool IMU6886Flag = false;
 //array to store temperature values from the last 24 hours (one value each 5 mins)
 unsigned long temp24h[288] = {0};
 int ctr = 0; //for array indeces
-unsigned long sum = 0; //for sum of array elements
+unsigned long sum2 = 0; //for sum of array elements, in case 2
 unsigned long avgTemp24 = 0;
-int count = 0;
+int count2 = 0;
+
+float graphArray[24] = {0}; //create new array to store non-zero temp values
 
 char tempCharArray[4];
 //2 for main temp whole number, 1 for decimal point, 1 for number after decimal point
@@ -354,18 +356,18 @@ void loop()
 
         if (M5.Btn.wasPressed())
         {
-          sum = 0;
-          count = 0;
+          sum2 = 0;
+          count2 = 0;
 
           for (int i = 0; i < n; i++)
           {
             if (temp24h[i] != 0) {
-              sum += temp24h[i];
-              count++;
+              sum2 += temp24h[i];
+              count2++;
             }
           }
 
-          avgTemp24 = sum / count;
+          avgTemp24 = sum2 / count2;
 
           dtostrf(avgTemp24, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
           Serial.println("got tempCharArray array");
@@ -448,7 +450,7 @@ void loop()
       }
 
 
-    case 4: //graphing
+    case 4: //graphing (elements in array temp24h over count
     { if (accZ > 0) { //facing down, nothing displayed
           FSM = 0; //placed it here so that if titlting was detected but it was facing down, it resets everything back to 0
           break; //AS IN BREAK OUT OF THIS CASE, IDK IF ITS PLACED RIGHT THO
@@ -461,9 +463,20 @@ void loop()
 
         if (M5.Btn.wasPressed())
         {
-          //check function for graphing
-          Serial.println("graph");
 
+          //288 elements,each element represents temp at the end of 5 mins, if we wanna graph the temp at the end of each hour, 288/24 = 12 , so we want every 12th element
+          for (int i = 11; i < n; i += 12)
+          {
+              graphArray += temp24h[i]; //or better, add to this graphArray the average temperatures for each hour of the 24 hours
+          }
+
+          //display color representing each temperature using color scale
+          M5.dis.drawpix(1, 0x0000ff); M5.dis.drawpix(2, 0x0000ff); M5.dis.drawpix(3, 0x0000ff); M5.dis.drawpix(4, 0x0000ff); M5.dis.drawpix(5, 0x0000ff);
+          M5.dis.drawpix(11, 0x0000ff); M5.dis.drawpix(12, 0x0000ff); M5.dis.drawpix(13, 0x0000ff); M5.dis.drawpix(14, 0x0000ff); M5.dis.drawpix(15, 0x0000ff);
+          M5.dis.drawpix(16, 0x0000ff); M5.dis.drawpix(17, 0x0000ff); M5.dis.drawpix(18, 0x0000ff); M5.dis.drawpix(19, 0x0000ff); M5.dis.drawpix(20, 0x0000ff);
+          M5.dis.drawpix(21, 0x0000ff); M5.dis.drawpix(22, 0x0000ff); M5.dis.drawpix(23, 0x0000ff); M5.dis.drawpix(24, 0x0000ff); M5.dis.drawpix(25, 0x0000ff);
+
+          Serial.println("graph");
         }
         break;
 
