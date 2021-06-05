@@ -494,6 +494,9 @@ void loop()
               M5.dis.drawpix(16, 0x00ff00); M5.dis.drawpix(17, 0x00ff00); M5.dis.drawpix(18, 0x00ff00); M5.dis.drawpix(19, 0x00ff00); M5.dis.drawpix(20, 0x00ff00);
               M5.dis.drawpix(21, 0x00ff00); M5.dis.drawpix(22, 0x00ff00); M5.dis.drawpix(23, 0x00ff00); M5.dis.drawpix(24, 0x00ff00); M5.dis.drawpix(10, 0x00ff00);
             }
+
+            do { } while (millis() - previousTime < 4000);
+            previousTime = millis();
           }
         }
         break;
@@ -524,6 +527,8 @@ void loop()
             graphColorScale(graphArray);
 
             Serial.println("graph");
+            do { } while (millis() - previousTime < 4000);
+            previousTime = millis();
           }
         }
         break;
@@ -572,9 +577,6 @@ void loop()
     default:
       break;
   }
-
-
-  //matrix.show();
 
   M5.update();
 }
