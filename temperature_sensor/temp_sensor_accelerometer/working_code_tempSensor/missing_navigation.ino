@@ -64,6 +64,7 @@ extern const unsigned char image_Celsius [77]; //variable is declared with exter
 extern const unsigned char image_Fahrenheit [77];
 extern const unsigned char image_Kelvin [77];
 
+
 void setup()
 {
   Serial.begin(115200);
@@ -347,7 +348,7 @@ void loop()
         M5.dis.fillpix(0x000000);//black
         Serial.println("black_0");
 
-        if (accZ < -0.5 && M5.Btn.wasReleased()) { //activation/waking up conditions
+        if (accZ < 0.5 && accZ > -0.5 && M5.Btn.wasReleased()) { //activation/waking up conditions
           FSM++;
         }
         break;
@@ -415,7 +416,6 @@ void loop()
             else {
               avgTemp24 = sum2 / count2;
             }
-
 
 
             dtostrf(avgTemp24, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
@@ -522,6 +522,13 @@ void loop()
               graphArray[i] = temp24h[(i * 12) + 11]; //we want 11th, 23rd, 35th (12th multiple-1), so using i, i*12+11 will get those values
               //or better, add to graphArray the average temperatures for each hour of the 24 hours
             }
+
+            //random values for graphArray just for testing!!!
+            for (int i = 0; i < 24; i ++)
+            {
+              graphArray[i] =40+2*(-1)^(i);
+            }
+
 
             //display color representing each temperature per 24hrs using color scale
             graphColorScale(graphArray);
