@@ -1,5 +1,3 @@
-#include <I2C_MPU6886.h>
-
 #include "M5Atom.h"
 
 #include <Adafruit_GFX.h>
@@ -83,7 +81,7 @@ int tempUnit = 1; //represents celsius
 
 void displayTempOnMatrix(char *tempCharArray, int tempUnit)
 {
-  for (int i = 0; i < 4; i++) //4 loops because we want temp to 1 decimal place
+  for (int i = 0; i < 5; i++) //5 loops because we want temp in celsius to 2 decimal places, and 1 decimal places in kelvin/fahrenheit
   {
 
     if (tempCharArray[i] == '.')
@@ -372,7 +370,7 @@ void loop()
           if (M5.Btn.wasReleased()) {
             M5.IMU.getTempData(&t);
             Serial.println("got temp");
-            dtostrf(t, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
+            dtostrf(t, 5, 2, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
             Serial.println("got tempCharArray array");
 
             displayTempOnMatrix(tempCharArray, 1);
@@ -418,7 +416,8 @@ void loop()
             }
 
 
-            dtostrf(avgTemp24, 4, 1, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
+
+            dtostrf(avgTemp24, 5, 2, tempCharArray); //creates char array of size 4 and 1 decimal place from float temperature
             Serial.println("got tempCharArray array");
 
             displayTempOnMatrix(tempCharArray, 1);
@@ -523,13 +522,6 @@ void loop()
               //or better, add to graphArray the average temperatures for each hour of the 24 hours
             }
 
-            //random values for graphArray just for testing!!!
-            for (int i = 0; i < 24; i ++)
-            {
-              graphArray[i] =40+2*(-1)^(i);
-            }
-
-
             //display color representing each temperature per 24hrs using color scale
             graphColorScale(graphArray);
 
@@ -559,8 +551,8 @@ void loop()
             M5.IMU.getTempData(&t);
 
 
-            t_f = (t * (9 / 5)) + 32;
-            dtostrf(t_f, 4, 1, tempCharArray);
+            t_f = (t * ((float(9)) / (float(5)))) + 32;
+            dtostrf(t_f, 5, 2, tempCharArray);
             displayTempOnMatrix(tempCharArray, 2);
             Serial.println("t_f");
 
@@ -571,7 +563,7 @@ void loop()
 
 
             t_k = t + 273;
-            dtostrf(t_k, 3, 0, tempCharArray);
+            dtostrf(t_k, 4, 1, tempCharArray);
             displayTempOnMatrix(tempCharArray, 3);
             Serial.println("t_k");
 
