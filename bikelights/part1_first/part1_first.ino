@@ -1,12 +1,12 @@
 #include <I2C_MPU6886.h>
-
 #include "M5Atom.h"
 
 //uint8_t FSM = 0;
 unsigned long previousTime = 0;
 bool state = false;
 int n = 5;
-float ax = 0, ay = 0, az = 0;
+//variables to collect acceleration data
+float ax = 0, ay = 0, az = 0; 
 float ax_avg = 0, ay_avg = 0, az_avg = 0;
 bool IMU6886Flag = false;
 
@@ -14,7 +14,7 @@ bool IMU6886Flag = false;
 void setup()
 {
   M5.begin(true, false, true);
-  IMU6886Flag = M5.IMU.Init() == 0;
+  IMU6886Flag = M5.IMU.Init() == 0; //initialising the device
 }
 
 
@@ -103,9 +103,9 @@ void loop()
       {
         if (IMU6886Flag)
         {
-          M5.IMU.getAccelData (&ax, &ax, &ax);
+          M5.IMU.getAccelData (&ax, &ax, &ax); //getting acceleration data only in x direction
 
-          ax_avg = ((ax * (n - 1)) + fabs(ax)) / n;
+          ax_avg = ((ax * (n - 1)) + fabs(ax)) / n; //calculating the moving average
           //   ay_avg = ((ay * (n - 1)) + fabs(ay)) / n;
           // az_avg = ((az * (n - 1)) + fabs(az)) / n;
 
@@ -124,7 +124,7 @@ void loop()
           {
 
             M5.dis.fillpix(0xffffff);//white
-            do {} while (millis() - previousTime < 1000);
+            do {} while (millis() - previousTime < 1000); //pause for 1 second
             previousTime = millis();
 
 
@@ -146,7 +146,7 @@ void loop()
   }
 
 
-  if (M5.Btn.wasPressed())
+  if (M5.Btn.wasPressed()) //to switch between the modes
   {
     FSM++;
     if (FSM >= 5)
