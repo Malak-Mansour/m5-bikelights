@@ -32,3 +32,17 @@ When the atom brakes suddenly, a solid red color gets displayed for a very short
 
 The 5th and last mode functions the exact same as the 5th one, except it displays white instead of red.
 
+## Examples
+
+![image](https://user-images.githubusercontent.com/84927745/121577260-fa40bc00-ca46-11eb-9f23-3e78d5102c08.png)
+
+## Libraries
+
+#include <I2C_MPU6886.h>
+
+#include "M5Atom.h"
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
