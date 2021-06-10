@@ -1,7 +1,23 @@
 # m5-bikelights
- atom/arduino
 
- Functionalities and method of using the bikelights M5stack atom: 
+This code turns the M5Stack ATOM Matrix/ Lite into a bikelight iterating through 5 modes as the user chooses.
+
+## M5 Stack ATOM Matrix/ Lite
+This development board is based around the ESP32 PICO processor, has a programmable button, 5x5 RGB LED matrix panel(WS2812C),
+Built-in Infra-red LED transmitter, Built-in MPU6886 Inertial Sensor, Extendable Pins & Holes, and can be programmed through the
+Arduino Environment.
+
+
+## Usage
+
+| Mode  | ATOM Display | 
+| ------------- | ------------- |
+| OFF  | All LEDs off  |
+| Manual Rear strobe (RED) | LEDs strobe at a predetermined interval |
+| Manual Front strobe (WHITE) | LEDs strobe at a predetermined interval |
+| Automatic Rear Mode Rear (RED) | LEDs are solid during a braking event. Return to strobe when riding |
+| Automatic Front Mode Rear (White) | LEDs are solid during a braking event. Return to strobe when riding |
+
 
 Once the M5stack atom gets started, it displays the 1st mode, known as the 'Off' mode as all LEDs are off. 
 
