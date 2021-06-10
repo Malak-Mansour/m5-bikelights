@@ -16,10 +16,12 @@ Arduino Environment.
 | Manual Rear strobe (RED) | LEDs strobe at a predetermined interval |
 | Manual Front strobe (WHITE) | LEDs strobe at a predetermined interval |
 | Automatic Rear Mode Rear (RED) | LEDs are solid during a braking event. Return to strobe when riding |
-| Automatic Front Mode Rear (White) | LEDs are solid during a braking event. Return to strobe when riding |
+| Automatic Front Mode Rear (WHITE) | LEDs are solid during a braking event. Return to strobe when riding |
 
 
-Once the M5stack atom gets started, it displays the 1st mode, known as the 'Off' mode as all LEDs are off. 
+Once the M5stack atom gets started, it displays the OFF mode.
+
+With each time the user presses the ATOM screen, it moves to the next mode in the list. If the screen is pressed whilst on the 5th mode, it moves back to the 1st mode.
 
 Once the button is pressed, the atom moves to the second mode, Manual Rear strobe (RED), which involves displaying a flashing/strobing red color.
 
@@ -28,6 +30,5 @@ Once the button is pressed again, the atom moves to the third mode, Manual Front
 The next mode, which is also accessed upon pressing the button, Automatic Rear Mode Rear (RED), involves displaying a flashing/strobing red color when the atom is in inertia: moving at a steady speed or at rest.
 When the atom brakes suddenly, a solid red color gets displayed for a very short period of time after which it goes back to strobing.
 
-The fifth and last mode functions the exact same as the previous one, except it displays white instead of red.
+The 5th and last mode functions the exact same as the 5th one, except it displays white instead of red.
 
-When the button is pressed again it goes back to the off mode and this sequence of modes keeping looping infinitely as long as the user presses on the screen to move between the modes sequentially. 
